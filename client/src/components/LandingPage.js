@@ -332,6 +332,7 @@ const LandingPage = () => {
   const controls = useAnimation();
 
   useEffect(() => {
+    // 22
     controls.start({ opacity: 1, y: 0 });
   }, [controls]);
 
@@ -342,13 +343,33 @@ const LandingPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your form submission logic here
-    console.log('Form submitted:', formData);
+  
+    try {
+      // const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/waitlist`;
+      const apiUrl = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001'}/api/waitlist`;
 
-    // Navigate to the ThankYouPage
-    navigate('/thankyou');
+      console.log('API URL:', apiUrl);
+  
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      // Check if the request was successful (status code 2xx)
+      if (response.ok) {
+        console.log('Form submitted:', formData);
+        navigate('/thankyou');
+      } else {
+        console.error('Error submitting the form:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error processing form submission:', error);
+    }
   };
 
   const { firstName, lastName, email, industry } = formData;
@@ -367,16 +388,16 @@ const LandingPage = () => {
       >
         <Link to='/' className='text-xl ml-4 text-black font-bold"'>BLOWP INC</Link>
         <div className="flex space-x-4">
-          <a href="#" className="text-black">
+          <a href="/" className="text-black">
             <FaFacebook />
           </a>
-          <a href="#" className="text-black">
+          <a href="/" className="text-black">
             <FaTwitter />
           </a>
-          <a href="#" className="text-black">
+          <a href="/" className="text-black">
             <FaEnvelope />
           </a>
-          <a href="#" className="text-black">
+          <a href="/" className="text-black">
             <FaInstagram />
           </a>
         </div>
@@ -392,7 +413,7 @@ const LandingPage = () => {
         >
           <img src={Main1} alt="creative person" className='w-full h-auto object-cover' />
         </motion.div> */}
-        
+
         <div className="text-left md:w-1/2 p-4">
           <h1 className="text-4xl text-[#2E3D2F] font-bold mb-2">
             Not rewarded enough <br />for your creativity?
@@ -479,7 +500,7 @@ const LandingPage = () => {
         >
           <img src={Main1} alt="creative person" className='w-full h-auto object-cover' />
         </motion.div>
-        
+
       </div>
 
       {/* ===========Footer========= */}
